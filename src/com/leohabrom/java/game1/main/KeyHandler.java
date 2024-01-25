@@ -1,4 +1,4 @@
-package com.leohabrom.java.game1;
+package com.leohabrom.java.game1.main;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

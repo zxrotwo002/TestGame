@@ -1,6 +1,7 @@
-package com.leohabrom.java.game1;
+package com.leohabrom.java.game1.main;
 
 import com.leohabrom.java.game1.entity.Player;
+import com.leohabrom.java.game1.tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,15 +10,17 @@ public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 16;
     final int scale = 4;
     public final int tileSize = originalTileSize * scale;
-    final int maxScreenCol = 16;
-    final int maxScreenRow = 12;
+    public final int maxScreenCol = 16;
+    public final int maxScreenRow = 12;
     public final int screenWidth = maxScreenCol * tileSize;
     public final int screenHeight = maxScreenRow * tileSize;
 
     int TPS = 120;
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
+    TileManager tileManager = new TileManager(this);
     Player player = new Player(this,keyHandler);
+    public CollisionChecker collisionChecker = new CollisionChecker(this);
 
     String tpsCount = "0";
 
@@ -36,7 +39,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        double drawIntervall = 1000000000.0 / TPS;
+        double drawInterval = 1000000000.0 / TPS;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -46,7 +49,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         while (gameThread != null) {
             currentTime = System.nanoTime();
-            delta = delta + (currentTime - lastTime) / drawIntervall;
+            delta = delta + (currentTime - lastTime) / drawInterval;
             timer = timer + (currentTime - lastTime);
             lastTime = currentTime;
             if (delta >= 1) {
@@ -73,6 +76,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        tileManager.draw(g2);
         player.draw(g2);
         g2.drawString("TPS: " + tpsCount, screenWidth - tileSize, tileSize);
         g2.dispose();
