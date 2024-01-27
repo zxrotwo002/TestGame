@@ -66,7 +66,7 @@ public class Player extends Entity{
         hitBox = new Rectangle();
         hitBox.x = gamePanel.tileSize/8;
         hitBox.y = gamePanel.tileSize/2;
-        hitBox.height = gamePanel.tileSize/2;
+        hitBox.height = gamePanel.tileSize/2 - 1;
         hitBox.width = (gamePanel.tileSize/8) * 6;
     }
     public void update() {
@@ -183,7 +183,6 @@ public class Player extends Entity{
         }
         g2.drawImage(image, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null);
         g2.drawImage(image2, screenX, screenY - gamePanel.tileSize,gamePanel.tileSize,gamePanel.tileSize,null);
-        g2.drawString(String.valueOf(counter2), 100, 100);
     }
 
     private BufferedImage getPlayerSprite() {

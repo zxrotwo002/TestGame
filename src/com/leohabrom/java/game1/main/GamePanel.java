@@ -1,6 +1,7 @@
 package com.leohabrom.java.game1.main;
 
 import com.leohabrom.java.game1.entity.Player;
+import com.leohabrom.java.game1.objects.ObjectManager;
 import com.leohabrom.java.game1.tile.TileManager;
 
 import javax.swing.*;
@@ -30,6 +31,7 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
     TileManager tileManager = new TileManager(this);
+    ObjectManager objectManager = new ObjectManager(this);
     Sound music = new Sound();
     Sound sound = new Sound();
     private boolean mKeySwitch = true;
@@ -93,6 +95,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         player.update();
+        objectManager.update();
         if (keyHandler.mPressed && mKeySwitch) {
             mKeySwitch = false;
             if (musicSwitch) {
@@ -110,6 +113,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         tileManager.draw(g2);
+        objectManager.draw(g2);
         player.draw(g2);
         g2.drawString("TPS: " + tpsCount, screenWidth - tileSize, tileSize);
         g2.dispose();
