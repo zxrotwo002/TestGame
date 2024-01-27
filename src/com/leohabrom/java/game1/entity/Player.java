@@ -84,8 +84,15 @@ public class Player extends Entity{
         d = keyHandler.dPressed;
         space = keyHandler.spacePressed;
 
-
-        shootDrops = space;
+        if (space) {
+            shootDrops = true;
+            if (counter2 == 0) {
+                gamePanel.playSoundEffect(1);
+            }
+        }
+        else {
+            shootDrops = false;
+        }
 
         if (w && !a && !s && !d) {
             direction = "N";
@@ -128,7 +135,7 @@ public class Player extends Entity{
         if (s && worldY <= gamePanel.worldHeight - gamePanel.tileSize) {
             worldY = worldY + speed * speedMultiplier;
         }
-        if (d && worldX <= gamePanel.worldHeight - gamePanel.tileSize) {
+        if (d && worldX <= gamePanel.worldWidth - gamePanel.tileSize) {
             worldX = worldX + speed * speedMultiplier;
         }
 

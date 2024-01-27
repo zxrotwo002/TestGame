@@ -22,15 +22,24 @@ public class GamePanel extends JPanel implements Runnable {
     public final int worldHeight = maxWorldRow * tileSize;
     public final int worldWidth = maxWorldCol * tileSize;
 
-
+    //TPS
     int TPS = 120;
+    String tpsCount = "0";
+
+    //SYSTEM
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
     TileManager tileManager = new TileManager(this);
+    Sound music = new Sound();
+    Sound sound = new Sound();
+    private boolean mKeySwitch = true;
+    private boolean musicSwitch = true;
+
+
+    //ENTITY
     public Player player = new Player(this,keyHandler);
     public CollisionChecker collisionChecker = new CollisionChecker(this);
 
-    String tpsCount = "0";
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -38,6 +47,10 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+    }
+
+    public void setupGame() {
+        playMusic(0);
     }
 
     public void startGameThread() {
@@ -54,6 +67,7 @@ public class GamePanel extends JPanel implements Runnable {
         long timer = 0;
         int drawCount = 0;
 
+        setupGame();
 
         while (gameThread != null) {
             currentTime = System.nanoTime();
@@ -79,6 +93,17 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         player.update();
+        if (keyHandler.mPressed && mKeySwitch) {
+            mKeySwitch = false;
+            if (musicSwitch) {
+                playMusic(0);
+            }
+            else {
+                stopMusic();
+            }
+        } else if (!keyHandler.mPressed && !mKeySwitch) {
+            mKeySwitch = true;
+        }
     }
 
     public void paintComponent(Graphics g) {
@@ -88,5 +113,19 @@ public class GamePanel extends JPanel implements Runnable {
         player.draw(g2);
         g2.drawString("TPS: " + tpsCount, screenWidth - tileSize, tileSize);
         g2.dispose();
+    }
+    public void playMusic(int i) {
+        music.setFile(i);
+        music.play();
+        music.loop();
+        musicSwitch = false;
+    }
+    public void stopMusic() {
+        music.stop();
+        musicSwitch = true;
+    }
+    public void playSoundEffect(int i) {
+        sound.setFile(i);
+        sound.play();
     }
 }
