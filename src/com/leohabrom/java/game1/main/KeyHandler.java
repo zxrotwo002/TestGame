@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
-    public boolean wPressed, aPressed, sPressed, dPressed, ctrlPressed, spacePressed;
+    public boolean wPressed, aPressed, sPressed, dPressed, shiftPressed, spacePressed;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -27,7 +27,7 @@ public class KeyHandler implements KeyListener {
             dPressed = true;
         }
         if (code == KeyEvent.VK_SHIFT) {
-            ctrlPressed = true;
+            shiftPressed = true;
         }
         if (code == KeyEvent.VK_SPACE) {
             spacePressed = true;
@@ -50,7 +50,7 @@ public class KeyHandler implements KeyListener {
             dPressed = false;
         }
         if (code == KeyEvent.VK_SHIFT) {
-            ctrlPressed = false;
+            shiftPressed = false;
         }
         if (code == KeyEvent.VK_SPACE) {
             spacePressed = false;

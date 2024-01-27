@@ -25,7 +25,7 @@ public class Main {
     }
     public static void getImage() {
         try {
-            image = ImageIO.read(Objects.requireNonNull(Main.class.getResourceAsStream("/res/player/player_s.png")));
+            image = ImageIO.read(Objects.requireNonNull(Main.class.getResourceAsStream("/gui/icon.png")));
         } catch (IOException e) {
             Logger.getGlobal().log(Level.INFO, e.getMessage());
         }

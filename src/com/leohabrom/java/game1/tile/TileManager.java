@@ -1,5 +1,6 @@
 package com.leohabrom.java.game1.tile;
 
+import com.leohabrom.java.game1.entity.Player;
 import com.leohabrom.java.game1.main.GamePanel;
 
 import javax.imageio.ImageIO;
@@ -20,25 +21,25 @@ public class TileManager {
         this.gamePanel = gamePanel;
 
         tiles = new Tile[10];
-        mapTileNum = new int[gamePanel.maxScreenCol][gamePanel.maxScreenRow];
+        mapTileNum = new int[gamePanel.maxWorldCol][gamePanel.maxWorldRow];
 
         getTileImage();
-        loadMap("/res/maps/map_0.txt");
+        loadMap("/maps/map_0.txt");
     }
     public void getTileImage() {
         try {
             tiles[0] = new Tile();
-            tiles[0].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/tile_0.png")));
+            tiles[0].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/tile_0.png")));
 
             tiles[1] = new Tile();
-            tiles[1].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/tile_1.png")));
+            tiles[1].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/tile_1.png")));
 
             tiles[2] = new Tile();
-            tiles[2].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/tile_2.png")));
+            tiles[2].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/tile_2.png")));
             tiles[2].collision = true;
 
             tiles[3] = new Tile();
-            tiles[3].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/tile_3.png")));
+            tiles[3].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/tile_3.png")));
         } catch (IOException e) {
             Logger.getGlobal().log(Level.INFO, e.getMessage());
         }
@@ -50,9 +51,9 @@ public class TileManager {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
 
-            for (int i = 0; i < gamePanel.maxScreenRow; i++) {
+            for (int i = 0; i < gamePanel.maxWorldRow; i++) {
                 String line = bufferedReader.readLine();
-                for (int j = 0; j < gamePanel.maxScreenCol; j++) {
+                for (int j = 0; j < gamePanel.maxWorldCol; j++) {
                     String[] numbers = line.split(" ");
                     int num = Integer.parseInt(numbers[j]);
                     mapTileNum[j] [i] = num;
@@ -69,11 +70,21 @@ public class TileManager {
 
     public void draw(Graphics2D g2) {
         int size = gamePanel.tileSize;
+        Player player = gamePanel.player;
 
-        for (int i = 0; i < gamePanel.maxScreenCol; i++) {
-            for (int j = 0; j < gamePanel.maxScreenRow; j++) {
+        for (int i = 0; i < gamePanel.maxWorldCol; i++) {
+            for (int j = 0; j < gamePanel.maxWorldRow; j++) {
+                int worldX = i * size;
+                int worldY = j * size;
+                int screenX = worldX - player.worldX + player.screenX;
+                int screenY = worldY - player.worldY + player.screenY;
                 int tileNum = mapTileNum[i][j];
-                g2.drawImage(tiles[tileNum].image, i * size, j * size, size, size, null);
+                if (worldX + size > player.worldX - player.screenX &&
+                        worldX - size < player.worldX + player.screenX &&
+                        worldY + size > player.worldY - player.screenY &&
+                        worldY - size < player.worldY + player.screenY) {
+                    g2.drawImage(tiles[tileNum].image, screenX, screenY, size, size, null);
+                }
             }
         }
     }
