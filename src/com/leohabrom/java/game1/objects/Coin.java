@@ -1,7 +1,6 @@
 package com.leohabrom.java.game1.objects;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
 
