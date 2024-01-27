@@ -172,6 +172,7 @@ public class Player extends Entity{
         }
         else {
             image2 = null;
+
         }
         g2.drawImage(image, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null);
         g2.drawImage(image2, screenX, screenY - gamePanel.tileSize,gamePanel.tileSize,gamePanel.tileSize,null);
