@@ -22,6 +22,7 @@ public class Main {
         window.setLocationRelativeTo(null);
         window.setVisible(true);
         gamePanel.startGameThread();
+        gamePanel.setWindow(window);
     }
     public static void getImage() {
         try {

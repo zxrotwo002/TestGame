@@ -1,6 +1,5 @@
 package com.leohabrom.java.game1.main;
 
-import com.leohabrom.java.game1.config.Score;
 import com.leohabrom.java.game1.entity.Player;
 import com.leohabrom.java.game1.objects.ObjectManager;
 import com.leohabrom.java.game1.tile.TileManager;
@@ -35,8 +34,16 @@ public class GamePanel extends JPanel implements Runnable {
     //SYSTEM
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
+    public MouseHandler mouseHandler = new MouseHandler();
     public TileManager tileManager = new TileManager(this);
     public ObjectManager objectManager;
+    MainMenu mainMenu = new MainMenu(this);
+    EscapeMenu escapeMenu = new EscapeMenu(this);
+    public boolean running = false;
+    public boolean started = true;
+    private boolean escKeySwitch = true;
+    public JFrame window;
+
     Sound music = new Sound();
     Sound sound = new Sound();
     private boolean mKeySwitch = true;
@@ -51,12 +58,17 @@ public class GamePanel extends JPanel implements Runnable {
     public CollisionChecker collisionChecker = new CollisionChecker(this);
 
 
+
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+        this.addMouseListener(mouseHandler);
+    }
+    public void setWindow(JFrame window) {
+        this.window = window;
     }
 
     public void setupGame() {
@@ -71,7 +83,6 @@ public class GamePanel extends JPanel implements Runnable {
         }
         score = new File(gameDir, "score.txt");
         objectManager = new ObjectManager(this);
-        playMusic(0);
     }
 
     public void startGameThread() {
@@ -113,14 +124,32 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        player.update();
-        objectManager.update();
+        if (running) {
+            player.update();
+            objectManager.update();
+        }
+        else if (started) {
+            mainMenu.update();
+            mainMenu.updateRectangle();
+        }
+        else {
+            escapeMenu.update();
+        }
+        if (keyHandler.escPressed && escKeySwitch) {
+            escKeySwitch = false;
+            started = false;
+            running = !running;
+        } else if (!keyHandler.escPressed && !escKeySwitch) {
+            escKeySwitch = true;
+        }
+        else {
+            escapeMenu.update();
+        }
         if (keyHandler.mPressed && mKeySwitch) {
             mKeySwitch = false;
             if (musicSwitch) {
                 playMusic(0);
-            }
-            else {
+            } else {
                 stopMusic();
             }
         } else if (!keyHandler.mPressed && !mKeySwitch) {
@@ -132,9 +161,17 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(Color.white);
-        tileManager.draw(g2);
-        objectManager.draw(g2);
-        player.draw(g2);
+        if (running) {
+            tileManager.draw(g2);
+            objectManager.draw(g2);
+            player.draw(g2);
+        }
+        else if (started) {
+            mainMenu.draw(g2);
+        }
+        else {
+            escapeMenu.draw(g2);
+        }
         g2.drawString("TPS: " + tpsCount, screenWidth - tileSize, tileSize);
         g2.dispose();
     }
