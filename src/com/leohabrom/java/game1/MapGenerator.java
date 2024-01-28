@@ -14,7 +14,7 @@ public class MapGenerator {
         for (int i = 0; i < 50; i++) {
             for (int j = 0; j < 50; j++) {
                 rgb[i][j] = convertRGBtoMap(image.getRGB(i,j));
-                System.out.print(image.getRGB(i,j));
+                System.out.print(image.getRGB(j,i));
                 System.out.print(" ");
             }
             System.out.println();
@@ -36,6 +36,7 @@ public class MapGenerator {
             case -16777216 -> 0;
             case -65536 -> 1;
             case -16744690 -> 3;
+            case -38400 -> 4;
             default -> 0;
         };
     }

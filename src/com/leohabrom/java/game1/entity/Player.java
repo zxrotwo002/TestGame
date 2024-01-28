@@ -20,6 +20,7 @@ public class Player extends Entity{
     int dropShoot = 0;
     int counter = 0;
     int counter2 = 0;
+    int counter3 = 0;
     public final int screenX;
     public final int screenY;
     public Player (GamePanel gamePanel, KeyHandler keyHandler) {
@@ -59,8 +60,8 @@ public class Player extends Entity{
         }
     }
     public void setDefaultValues() {
-        worldX = gamePanel.tileSize * 19;
-        worldY = gamePanel.tileSize * 21;
+        location.setWorldX(gamePanel.tileSize * 19);
+        location.setWorldY(gamePanel.tileSize * 21);
         speed = 1;
         direction = "S";
         hitBox = new Rectangle();
@@ -86,12 +87,11 @@ public class Player extends Entity{
 
         if (space) {
             shootDrops = true;
-            if (counter2 == 0) {
-                gamePanel.playSoundEffect(1);
-            }
+            playDropSound();
         }
         else {
             shootDrops = false;
+            counter3 = 0;
         }
 
         if (w && !a && !s && !d) {
@@ -121,22 +121,23 @@ public class Player extends Entity{
 
         collisionOn = false;
         gamePanel.collisionChecker.checkTile(this);
+        gamePanel.objectManager.checkCoin(this);
 
         if (collisionOn) {
             speedMultiplier = 0;
         }
 
-        if (w && worldY >= 0) {
-            worldY = worldY - speed * speedMultiplier;
+        if (w && location.getWorldY() >= 0) {
+            location.setWorldY(location.getWorldY() - speed * speedMultiplier);
         }
-        if (a && worldX >= 0) {
-            worldX = worldX - speed * speedMultiplier;
+        if (a && location.getWorldX() >= 0) {
+            location.setWorldX(location.getWorldX() - speed * speedMultiplier);
         }
-        if (s && worldY <= gamePanel.worldHeight - gamePanel.tileSize) {
-            worldY = worldY + speed * speedMultiplier;
+        if (s && location.getWorldY() <= gamePanel.worldHeight - gamePanel.tileSize) {
+            location.setWorldY(location.getWorldY() + speed * speedMultiplier);
         }
-        if (d && worldX <= gamePanel.worldWidth - gamePanel.tileSize) {
-            worldX = worldX + speed * speedMultiplier;
+        if (d && location.getWorldX() <= gamePanel.worldWidth - gamePanel.tileSize) {
+            location.setWorldX(location.getWorldX() + speed * speedMultiplier);
         }
 
         if (counter < 20) {
@@ -161,7 +162,15 @@ public class Player extends Entity{
         else {
             counter2 = 0;
         }
-
+    }
+    private void playDropSound() {
+        if (counter3 == 0) {
+            gamePanel.playSoundEffect(1);
+        }
+        counter3++;
+        if (counter3 == 60) {
+            counter3 = 0;
+        }
     }
     public void draw(Graphics2D g2) {
         BufferedImage image2;

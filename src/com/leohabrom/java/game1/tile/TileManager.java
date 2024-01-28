@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Objects;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +25,24 @@ public class TileManager {
         mapTileNum = new int[gamePanel.maxWorldCol][gamePanel.maxWorldRow];
 
         getTileImage();
-        loadMap("/maps/map_0.txt");
+        Random random = new Random();
+        int select = random.nextInt(4);
+        switch (select) {
+            case 0:
+                loadMap("/maps/map_0.txt");
+                break;
+            case 1:
+                loadMap("/maps/map_1.txt");
+                break;
+            case 2:
+                loadMap("/maps/map_2.txt");
+                break;
+            case 3:
+                loadMap("/maps/map_3.txt");
+                break;
+            default:
+                loadMap("/maps/map_0.txt");
+        }
     }
     public void getTileImage() {
         try {
@@ -40,6 +58,9 @@ public class TileManager {
 
             tiles[3] = new Tile();
             tiles[3].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/tile_3.png")));
+
+            tiles[4] = new Tile();
+            tiles[4].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/tile_4.png")));
         } catch (IOException e) {
             Logger.getGlobal().log(Level.INFO, e.getMessage());
         }
@@ -76,16 +97,20 @@ public class TileManager {
             for (int j = 0; j < gamePanel.maxWorldRow; j++) {
                 int worldX = i * size;
                 int worldY = j * size;
-                int screenX = worldX - player.worldX + player.screenX;
-                int screenY = worldY - player.worldY + player.screenY;
+                int screenX = worldX - player.getLocation().getWorldX() + player.screenX;
+                int screenY = worldY - player.getLocation().getWorldY() + player.screenY;
                 int tileNum = mapTileNum[i][j];
-                if (worldX + size > player.worldX - player.screenX &&
-                        worldX - size < player.worldX + player.screenX &&
-                        worldY + size > player.worldY - player.screenY &&
-                        worldY - size < player.worldY + player.screenY) {
+                if (worldX + size > player.getLocation().getWorldX() - player.screenX &&
+                        worldX - size < player.getLocation().getWorldX() + player.screenX &&
+                        worldY + size > player.getLocation().getWorldY() - player.screenY &&
+                        worldY - size < player.getLocation().getWorldY() + player.screenY) {
                     g2.drawImage(tiles[tileNum].image, screenX, screenY, size, size, null);
                 }
             }
         }
+    }
+
+    public int getMapTileNum(int x,int y) {
+        return mapTileNum[x][y];
     }
 }

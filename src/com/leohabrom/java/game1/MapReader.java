@@ -37,6 +37,7 @@ public class MapReader {
             case 0 -> -16777216;
             case 1 -> -65536;
             case 3 -> -16744690;
+            case 4 -> -38400;
             default -> -167776;
         };
     }

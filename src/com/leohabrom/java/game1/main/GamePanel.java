@@ -30,8 +30,8 @@ public class GamePanel extends JPanel implements Runnable {
     //SYSTEM
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
-    TileManager tileManager = new TileManager(this);
-    ObjectManager objectManager = new ObjectManager(this);
+    public TileManager tileManager = new TileManager(this);
+    public ObjectManager objectManager = new ObjectManager(this);
     Sound music = new Sound();
     Sound sound = new Sound();
     private boolean mKeySwitch = true;
@@ -112,6 +112,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(Color.white);
         tileManager.draw(g2);
         objectManager.draw(g2);
         player.draw(g2);

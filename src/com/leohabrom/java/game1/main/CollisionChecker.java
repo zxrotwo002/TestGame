@@ -10,10 +10,10 @@ public class CollisionChecker {
     }
 
     public void checkTile(Entity entity) {
-        int entityLeftX = entity.worldX + entity.hitBox.x;
-        int entityRightX = entity.worldX + entity.hitBox.x + entity.hitBox.width;
-        int entityTopY = entity.worldY + entity.hitBox.y;
-        int entityBottomY = entity.worldY + entity.hitBox.y + entity.hitBox.height;
+        int entityLeftX = entity.getLocation().getWorldX() + entity.hitBox.x;
+        int entityRightX = entity.getLocation().getWorldX() + entity.hitBox.x + entity.hitBox.width;
+        int entityTopY = entity.getLocation().getWorldY() + entity.hitBox.y;
+        int entityBottomY = entity.getLocation().getWorldY() + entity.hitBox.y + entity.hitBox.height;
 
         int entityLeftCol = entityLeftX / gamePanel.tileSize;
         int entityRightCol = entityRightX / gamePanel.tileSize;
