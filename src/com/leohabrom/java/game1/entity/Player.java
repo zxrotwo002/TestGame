@@ -172,6 +172,7 @@ public class Player extends Entity{
             counter3 = 0;
         }
     }
+
     public void draw(Graphics2D g2) {
         BufferedImage image2;
         BufferedImage image = getPlayerSprite();
