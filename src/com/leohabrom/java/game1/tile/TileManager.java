@@ -25,6 +25,9 @@ public class TileManager {
         mapTileNum = new int[gamePanel.maxWorldCol][gamePanel.maxWorldRow];
 
         getTileImage();
+        newMap();
+    }
+    public void newMap() {
         Random random = new Random();
         int select = random.nextInt(4);
         switch (select) {

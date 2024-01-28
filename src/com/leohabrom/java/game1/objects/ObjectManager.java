@@ -1,5 +1,6 @@
 package com.leohabrom.java.game1.objects;
 
+import com.leohabrom.java.game1.config.Score;
 import com.leohabrom.java.game1.entity.Entity;
 import com.leohabrom.java.game1.entity.Player;
 import com.leohabrom.java.game1.main.GamePanel;
@@ -17,12 +18,17 @@ public class ObjectManager {
     int coinCount = 0;
     int animation = 0;
     int coinOffset = 0;
+    int coinSpeed = 600;
     int maxCoins = 20;
-    int points = 0;
+    int level = 0;
+    int points;
+    Score score;
     HitboxChecker hitboxChecker = new HitboxChecker();
     public ObjectManager(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
+        score = new Score(gamePanel);
         coin = new Coin[maxCoins];
+        points = score.readScore();
     }
 
     public void update() {
@@ -57,7 +63,7 @@ public class ObjectManager {
         }
         counter++;
 
-        if (counter2 < 1200) {
+        if (counter2 < coinSpeed) {
             counter2++;
         }
         else {
@@ -65,6 +71,18 @@ public class ObjectManager {
             if (coinCount < maxCoins) {
                 createNewCoin();
             }
+        }
+        if (points % 20 == 19) {
+            score.writeScore(points + 1);
+            points = score.readScore();
+            for (int i = coinCount-1; i >= 0; i--) {
+                coin[i] = null;
+                coinCount--;
+            }
+            gamePanel.tileManager.newMap();
+            gamePanel.player.setDefaultValues();
+            level++;
+            gamePanel.playSoundEffect(3);
         }
     }
 
@@ -80,6 +98,7 @@ public class ObjectManager {
             coin[coinCount].getLocation().setWorldX(worldX);
             coin[coinCount].getLocation().setWorldY(worldY);
             coinCount++;
+            System.out.println("New Coin (" + (coinCount) + ") created");
         }
         else createNewCoin();
     }
@@ -93,7 +112,8 @@ public class ObjectManager {
                     } else coin[j] = null;
                 }
                 coinCount--;
-                points++;
+                score.writeScore(points + 1);
+                points = score.readScore();
                 gamePanel.playSoundEffect(2);
             }
         }
@@ -119,5 +139,7 @@ public class ObjectManager {
         int pointsX = (gamePanel.maxScreenCol - 1) * gamePanel.tileSize;
         int pointsY = gamePanel.tileSize/2;
         g2.drawString("Points: " + points,pointsX , pointsY);
+        g2.drawString("Coins: " + coinCount,pointsX , pointsY + gamePanel.tileSize);
+        g2.drawString("Level: " + level,pointsX , 2* gamePanel.tileSize);
     }
 }

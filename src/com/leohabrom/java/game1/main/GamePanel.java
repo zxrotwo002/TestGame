@@ -1,11 +1,16 @@
 package com.leohabrom.java.game1.main;
 
+import com.leohabrom.java.game1.config.Score;
 import com.leohabrom.java.game1.entity.Player;
 import com.leohabrom.java.game1.objects.ObjectManager;
 import com.leohabrom.java.game1.tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 16;
@@ -31,11 +36,14 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
     public TileManager tileManager = new TileManager(this);
-    public ObjectManager objectManager = new ObjectManager(this);
+    public ObjectManager objectManager;
     Sound music = new Sound();
     Sound sound = new Sound();
     private boolean mKeySwitch = true;
     private boolean musicSwitch = true;
+
+    //Files
+    public File score;
 
 
     //ENTITY
@@ -52,6 +60,17 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void setupGame() {
+        try {
+            Files.createDirectories(Paths.get(System.getenv("APPDATA")+"/.testgame/"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        File gameDir = new File(System.getenv("APPDATA")+"/.testgame/");
+        if (!gameDir.exists()){
+            System.exit(0);
+        }
+        score = new File(gameDir, "score.txt");
+        objectManager = new ObjectManager(this);
         playMusic(0);
     }
 
